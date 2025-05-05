@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ animal.name }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+    <div class="container my-5">
+        <h1 class="text-center mb-4">{{ animal.name }}</h1>
+        
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card shadow-sm">
+                    <img src="https://via.placeholder.com/350x200" class="card-img-top" alt="{{ animal.name }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ animal.name }}</h5>
+                        <p class="card-text">
+                            <strong>Espèce :</strong> {{ animal.species }}<br>
+                            <strong>Âge :</strong> {{ animal.age }} ans
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Description</h5>
+                        <p>{{ animal.description }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-4">
+            <form method="post" action="{{ path('add_to_cart', { id: animal.id }) }}">
+                <button type="submit" class="btn btn-primary w-100">Ajouter au panier</button>
+            </form>
+        </div>
+
+        <div class="mt-3 text-center">
+            <a href="{{ path('home') }}" class="btn btn-secondary">Retour à l'accueil</a>
+        </div>
+    </div>
+{% endblock %}

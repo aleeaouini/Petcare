@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Page d'Accueil{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1 class="text-center my-4">Liste des animaux</h1>
+        
+        {% if animals|length > 0 %}
+            <div class="row">
+                {% for animal in animals %}
+                    <div class="col-md-4 mb-4">
+                        <div class="card shadow-sm">
+                            <a href="{{ path('animal_show', { id: animal.id }) }}" class="text-decoration-none">
+                                <img src="https://via.placeholder.com/350x200" class="card-img-top" alt="{{ animal.name }}">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ animal.name }}</h5>
+                                    <p class="card-text">
+                                        <span class="badge bg-primary">{{ animal.species }}</span>
+                                        <span class="badge bg-secondary">{{ animal.age }} ans</span>
+                                    </p>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="alert alert-warning text-center" role="alert">
+                Aucun animal disponible actuellement.
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
