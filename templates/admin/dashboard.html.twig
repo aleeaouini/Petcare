@@ -1,0 +1,452 @@
+{# templates/admin/dashboard.html.twig #} 
+{% extends 'base.html.twig' %}
+
+{% block title %}Dashboard Vétérinaire{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    <style>
+        :root {
+            --primary: #4a6da7;
+            --primary-dark: #3a5a8c;
+            --accent: #51b6a5;
+            --light-gray: #f5f7fa;
+            --gray: #e1e5eb;
+            --text: #333;
+            --danger: #dc3545;
+            --success: #28a745;
+        }
+
+        .admin-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 1.5rem;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        .breadcrumb-item {
+            display: flex;
+            align-items: center;
+        }
+
+        .breadcrumb-item:not(:last-child)::after {
+            content: "›";
+            margin: 0 0.5rem;
+            color: #aaa;
+        }
+
+        .breadcrumb-link {
+            color: var(--primary);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .breadcrumb-link:hover {
+            color: var(--primary-dark);
+            text-decoration: underline;
+        }
+
+        .breadcrumb-current {
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        .admin-title {
+            color: var(--primary);
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .admin-description {
+            color: #666;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+            line-height: 1.5;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--gray);
+            padding-bottom: 1rem;
+        }
+
+        .admin-subtitle {
+            color: var(--text);
+            font-size: 1.5rem;
+            font-weight: 500;
+            margin: 0;
+        }
+
+        .admin-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background-color: var(--light-gray);
+            border-radius: 8px;
+            padding: 1.25rem;
+            display: flex;
+            align-items: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-icon {
+            background-color: var(--primary);
+            color: white;
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+        }
+
+        .stat-content {
+            flex: 1;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text);
+            margin: 0;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+        }
+
+        .admin-table th {
+            background-color: var(--light-gray);
+            color: var(--text);
+            font-weight: 500;
+            text-align: left;
+            padding: 1rem;
+            border-bottom: 2px solid var(--gray);
+        }
+
+        .admin-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--gray);
+            vertical-align: middle;
+        }
+
+        .admin-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .admin-table tr:hover {
+            background-color: var(--light-gray);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .action-link, .delete-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.5rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .action-link {
+            background-color: var(--light-gray);
+            color: var(--primary);
+        }
+
+        .action-link:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .delete-button {
+            background-color: var(--light-gray);
+            color: var(--danger);
+            border: none;
+            cursor: pointer;
+        }
+
+        .delete-button:hover {
+            background-color: var(--danger);
+            color: white;
+        }
+
+        .empty-row {
+            text-align: center;
+            color: #888;
+            padding: 2rem 1rem !important;
+            font-style: italic;
+        }
+
+        .add-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 1.5rem;
+            padding: 0.75rem 1.25rem;
+            background-color: var(--accent);
+            color: white;
+            border-radius: 8px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .add-link:hover {
+            background-color: darken(var(--accent), 10%);
+            box-shadow: 0 4px 10px rgba(81, 182, 165, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .animal-photo {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+
+        .animal-photo:hover {
+            transform: scale(1.1);
+        }
+
+        .animal-name {
+            font-weight: 500;
+            color: var(--primary);
+        }
+
+        .animal-species {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background-color: var(--light-gray);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .search-form {
+            display: flex;
+            gap: 0.5rem;
+            max-width: 300px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--gray);
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+
+        .search-button {
+            padding: 0.5rem 1rem;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .search-button:hover {
+            background-color: var(--primary-dark);
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="admin-container">
+        <div class="breadcrumb">
+            <div class="breadcrumb-item">
+                <a href="{{ path('home') }}" class="breadcrumb-link">Accueil</a>
+            </div>
+            <div class="breadcrumb-item">
+                <span class="breadcrumb-current">Dashboard Vétérinaire</span>
+            </div>
+        </div>
+        
+        <h1 class="admin-title">Bienvenue sur le Dashboard Vétérinaire</h1>
+        <p class="admin-description">Gérez vos patients, consultations et traitements depuis cette interface intuitive.</p>
+
+        <!-- Dashboard Statistics Section -->
+        <div class="admin-stats">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M17 21V19C17 17.9391 16.5786 16.9217 15.8284 16.1716C15.0783 15.4214 14.0609 15 13 15H5C3.93913 15 2.92172 15.4214 2.17157 16.1716C1.42143 16.9217 1 17.9391 1 19V21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M9 11C11.2091 11 13 9.20914 13 7C13 4.79086 11.2091 3 9 3C6.79086 3 5 4.79086 5 7C5 9.20914 6.79086 11 9 11Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M23 21V19C22.9993 18.1137 22.7044 17.2528 22.1614 16.5523C21.6184 15.8519 20.8581 15.3516 20 15.13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M16 3.13C16.8604 3.35031 17.623 3.85071 18.1676 4.55232C18.7122 5.25392 19.0078 6.11683 19.0078 7.005C19.0078 7.89318 18.7122 8.75608 18.1676 9.45769C17.623 10.1593 16.8604 10.6597 16 10.88" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <div class="stat-content">
+                    <h3 class="stat-value">{{ animals|length }}</h3>
+                    <p class="stat-label">Animaux enregistrés</p>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 8V12L15 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M3.05078 11.0001C3.27441 7.94259 4.94119 5.16558 7.53257 3.46396C10.124 1.76235 13.3489 1.34103 16.2837 2.31972C19.2185 3.29841 21.5167 5.5733 22.5193 8.49658C23.5219 11.4199 23.1279 14.6469 21.452 17.2529C19.7761 19.8589 16.7541 21.5515 13.5 22C11.079 22.3353 8.60365 21.8809 6.50001 20.7264" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M7 16.8885C6.19825 16.222 5.53068 15.404 5.03808 14.4803C4.54548 13.5566 4.2374 12.5449 4.13401 11.5C4.04401 10.5 4.17468 9.16667 4.50001 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M2 14L7 17L5 21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <div class="stat-content">
+                    <h3 class="stat-value">0</h3>
+                    <p class="stat-label">Consultations aujourd'hui</p>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M19 4H5C3.89543 4 3 4.89543 3 6V20C3 21.1046 3.89543 22 5 22H19C20.1046 22 21 21.1046 21 20V6C21 4.89543 20.1046 4 19 4Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M16 2V6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M8 2V6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M3 10H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M8 14H8.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M12 14H12.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M16 14H16.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M8 18H8.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M12 18H12.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M16 18H16.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <div class="stat-content">
+                    <h3 class="stat-value">0</h3>
+                    <p class="stat-label">Rendez-vous à venir</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="admin-header">
+            <h2 class="admin-subtitle">Liste des Animaux</h2>
+            <form class="search-form" action="{{ path('dashboard') }}" method="GET">
+                <input type="text" name="search" placeholder="Rechercher un animal..." class="search-input">
+                <button type="submit" class="search-button">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </form>
+        </div>
+        
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Photo</th>
+                    <th>Nom</th>
+                    <th>Espèce</th>
+                    <th>Description</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for animal in animals %}
+                    <tr>
+                        <td>
+                            {% if animal.photo %}
+                                <img src="{{ asset('uploads/' ~ animal.photo) }}" alt="Photo de {{ animal.name }}" class="animal-photo">
+                            {% else %}
+                                <div style="width: 80px; height: 80px; background-color: var(--light-gray); border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M17.5 8C17.5 8 19 9.5 19 12C19 14.5 17.5 16 17.5 16" stroke="#888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M6.5 8C6.5 8 5 9.5 5 12C5 14.5 6.5 16 6.5 16" stroke="#888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M13.5 22H10.5C9.50263 22 8.8044 21.4099 8.55279 20.5622C8.14258 19.1014 6.9848 16.6405 5.5 16.5M5.5 16.5H4C3.5 16.5 2 16.5 2 14.5C2 12.5 5.5 9.5 5.5 7.5C5.5 5.5 7 5 8 5C9 5 9.7438 5.5 10.5 7.5M5.5 16.5C5.5 16.5 6.63094 16 7.26547 14.4953M18.5 16.5H20C20.5 16.5 22 16.5 22 14.5C22 12.5 18.5 9.5 18.5 7.5C18.5 5.5 17 5 16 5C15 5 14.2562 5.5 13.5 7.5M18.5 16.5C18.5 16.5 17.3691 16 16.7345 14.4953M10.5 7.5C10.5 7.5 11.7392 9.5 12 11.5C12.2608 13.5 13.5 7.5 13.5 7.5M10.5 7.5H13.5" stroke="#888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </div>
+                            {% endif %}
+                        </td>
+                        <td class="animal-name">{{ animal.name }}</td>
+                        <td><span class="animal-species">{{ animal.species }}</span></td>
+                        <td>{{ animal.description|length > 80 ? animal.description|slice(0, 80) ~ '...' : animal.description }}</td>
+                        <td class="action-buttons">
+                            <a href="{{ path('edit_animal', {'id': animal.id}) }}" class="action-link">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M11 4H4C3.46957 4 2.96086 4.21071 2.58579 4.58579C2.21071 4.96086 2 5.46957 2 6V20C2 20.5304 2.21071 21.0391 2.58579 21.4142C2.96086 21.7893 3.46957 22 4 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M18.5 2.50001C18.8978 2.10219 19.4374 1.87869 20 1.87869C20.5626 1.87869 21.1022 2.10219 21.5 2.50001C21.8978 2.89784 22.1213 3.4374 22.1213 4.00001C22.1213 4.56262 21.8978 5.10219 21.5 5.50001L12 15L8 16L9 12L18.5 2.50001Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                Modifier
+                            </a>
+                            <form method="POST" action="{{ path('delete_animal', {'id': animal.id}) }}" class="delete-form" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet animal?');">
+                                <button type="submit" class="delete-button">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M3 6H5H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M8 6V4C8 3.46957 8.21071 2.96086 8.58579 2.58579C8.96086 2.21071 9.46957 2 10 2H14C14.5304 2 15.0391 2.21071 15.4142 2.58579C15.7893 2.96086 16 3.46957 16 4V6M19 6V20C19 20.5304 18.7893 21.0391 18.4142 21.4142C18.0391 21.7893 17.5304 22 17 22H7C6.46957 22 5.96086 21.7893 5.58579 21.4142C5.21071 21.0391 5 20.5304 5 20V6H19Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                    Supprimer
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="5" class="empty-row">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-bottom: 1rem; opacity: 0.5;">
+                                <path d="M8.99976 15L12.9998 11L16.9998 15" stroke="#888" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M3.03955 12.8022L3.03966 12.8023C4.28647 16.3233 6.72217 18.3901 9.19966 19.3334C10.4384 19.805 11.7189 20.0001 12.9997 20.0001C14.2806 20.0001 15.5611 19.805 16.7998 19.3334C19.2773 18.3901 21.713 16.3233 22.9598 12.8023L22.9599 12.8022C23.0135 12.6437 23.0135 12.3562 22.9599 12.1977L22.9598 12.1978C21.713 8.67671 19.2773 6.60992 16.7998 5.66661C15.5611 5.19501 14.2806 4.99988 12.9997 4.99988C11.7189 4.99988 10.4384 5.19502 9.19966 5.66661C6.72217 6.60992 4.28648 8.67672 3.03966 12.1978L3.03955 12.1977C2.98593 12.3562 2.98593 12.6437 3.03955 12.8022Z" stroke="#888" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <div>Aucun animal trouvé</div>
+                            <div style="margin-top: 0.5rem; font-size: 0.9rem;">Ajoutez votre premier patient en cliquant sur le bouton ci-dessous</div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <a href="{{ path('new_animal') }}" class="add-link">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 5V19" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M5 12H19" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Ajouter un nouvel animal
+        </a>
+    </div>
+{% endblock %}

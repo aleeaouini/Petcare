@@ -1,0 +1,240 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon Panier{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        :root {
+            --primary-color: #007bff;
+            --secondary-color: #6c757d;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --background-light: #f8f9fa;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --border-radius: 12px;
+            --transition: all 0.3s ease;
+        }
+
+        .cart-header {
+            background: linear-gradient(180deg, var(--background-light), #ffffff);
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .cart-header h1 {
+            color: #2d3748;
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .cart-item {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: var(--transition);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .cart-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .cart-item-image {
+            flex: 0 0 150px;
+            max-width: 150px;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+        }
+
+        .cart-item-image img {
+            width: 100%;
+            height: 100px;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .cart-item-image:hover img {
+            transform: scale(1.05);
+        }
+
+        .cart-item-content {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .cart-item-content h3 {
+            color: #2d3748;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .cart-item-content p {
+            color: #6b7280;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+
+        .cart-item-actions {
+            flex: 0 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .btn-delete {
+            background: var(--danger-color);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .btn-delete:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .btn-confirm {
+            background: var(--success-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: var(--transition);
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .btn-confirm:hover {
+            background: #218838;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .btn-back {
+            display: inline-flex;
+            align-items: center;
+            color: var(--secondary-color);
+            font-weight: 500;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .btn-back:hover {
+            color: var(--primary-color);
+            transform: translateX(-5px);
+        }
+
+        .empty-cart {
+            text-align: center;
+            padding: 3rem;
+            background: var(--background-light);
+            border-radius: var(--border-radius);
+            color: #6b7280;
+            font-size: 1.1rem;
+        }
+
+        .action-section {
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .cart-header h1 {
+                font-size: 1.5rem;
+            }
+
+            .cart-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .cart-item-image {
+                flex: 0 0 100%;
+                max-width: 100%;
+            }
+
+            .cart-item-image img {
+                height: 150px;
+            }
+
+            .cart-item-actions {
+                width: 100%;
+                justify-content: flex-end;
+            }
+
+            .btn-confirm {
+                max-width: 100%;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="cart-header">
+        <div class="container">
+            <h1>Mon Panier</h1>
+        </div>
+    </div>
+
+    <div class="container mb-5">
+        {% if items is empty %}
+            <div class="empty-cart">
+                <p>Votre panier est vide.</p>
+                <a href="{{ path('home') }}" class="btn-back">
+                    <i class="bi bi-arrow-left me-2"></i> Retour à l'accueil
+                </a>
+            </div>
+        {% else %}
+            {% for item in items %}
+                <div class="cart-item">
+                    <div class="cart-item-image">
+                        <img src="{{ item.animal.photo ? asset('uploads/' ~ item.animal.photo) : asset('images/default.jpg') }}"
+                             alt="{{ item.animal.name }}" loading="lazy">
+                    </div>
+                    <div class="cart-item-content">
+                        <h3>{{ item.animal.name }} - {{ item.animal.age }} an{% if item.animal.age > 1 %}s{% endif %}</h3>
+                        <p>{{ item.animal.description }}</p>
+                    </div>
+                    <div class="cart-item-actions">
+                        <form method="post" action="{{ path('delete_cart_item', {id: item.id}) }}">
+                            <button type="submit" class="btn-delete">
+                                <i class="bi bi-trash me-2"></i> Supprimer
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            {% endfor %}
+
+            <div class="action-section">
+                <form method="post" action="{{ path('confirm_cart') }}">
+                    <button type="submit" class="btn-confirm">
+                        <i class="bi bi-check-circle me-2"></i> Confirmer le panier
+                    </button>
+                </form>
+            </div>
+        {% endif %}
+
+        {% if items is not empty %}
+            <div class="action-section">
+                <a href="{{ path('home') }}" class="btn-back">
+                    <i class="bi bi-arrow-left me-2"></i> Retour à l'accueil
+                </a>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

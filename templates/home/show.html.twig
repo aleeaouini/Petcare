@@ -1,46 +1,303 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ animal.name }}{% endblock %}
+{% block title %}{{ animal.name }} - Détails de l'animal{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
+    <style>
+        :root {
+            --primary-color: #007bff;
+            --secondary-color: #6c757d;
+            --success-color: #28a745;
+            --background-light: #f8f9fa;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --border-radius: 12px;
+            --transition: all 0.3s ease;
+        }
+
+        .animal-header {
+            background: linear-gradient(180deg, var(--background-light), #ffffff);
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .animal-image {
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .animal-image img {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .animal-image:hover img {
+            transform: scale(1.05);
+        }
+
+        .animal-details {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            min-height: 100%;
+            transition: var(--transition);
+        }
+
+        .animal-details:hover {
+            transform: translateY(-5px);
+        }
+
+        .animal-meta {
+            margin-top: 1.5rem;
+            background: var(--background-light);
+            border-radius: var(--border-radius);
+            padding: 1rem;
+        }
+
+        .badge-large {
+            font-size: 0.85rem;
+            padding: 0.4rem 0.8rem;
+            margin-right: 0.5rem;
+            border-radius: 20px;
+        }
+
+        .action-buttons {
+            margin-top: 2rem;
+        }
+
+        .btn-adopt {
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            border-radius: 8px;
+            background: var(--primary-color);
+            border: none;
+            transition: var(--transition);
+        }
+
+        .btn-adopt:hover {
+            background: #0056b3;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .description-title {
+            position: relative;
+            padding-bottom: 0.75rem;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            color: #2d3748;
+        }
+
+        .description-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: var(--primary-color);
+            border-radius: 2px;
+        }
+
+        .characteristics {
+            margin-top: 2rem;
+        }
+
+        .animal-name {
+            color: #2d3748;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .characteristic-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #f1f3f5;
+        }
+
+        .characteristic-item i {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            margin-right: 1rem;
+        }
+
+        .btn-outline-secondary {
+            border-radius: 8px;
+            transition: var(--transition);
+        }
+
+        .btn-outline-secondary:hover {
+            background: var(--secondary-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .similar-animals {
+            margin-top: 3rem;
+        }
+
+        .similar-animals h3 {
+            font-size: 1.75rem;
+            color: #2d3748;
+            position: relative;
+            padding-bottom: 0.75rem;
+        }
+
+        .similar-animals h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: var(--primary-color);
+            border-radius: 2px;
+        }
+
+        @media (max-width: 768px) {
+            .animal-image img {
+                height: 300px;
+            }
+
+            .animal-name {
+                font-size: 1.5rem;
+            }
+
+            .animal-details {
+                padding: 1.5rem;
+            }
+
+            .btn-adopt {
+                padding: 0.6rem 1rem;
+            }
+        }
+    </style>
 {% endblock %}
 
 {% block body %}
-    <div class="container my-5">
-        <h1 class="text-center mb-4">{{ animal.name }}</h1>
-        
-        <div class="row">
-            <div class="col-md-6">
-                <div class="card shadow-sm">
-                    <img src="https://via.placeholder.com/350x200" class="card-img-top" alt="{{ animal.name }}">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ animal.name }}</h5>
-                        <p class="card-text">
-                            <strong>Espèce :</strong> {{ animal.species }}<br>
-                            <strong>Âge :</strong> {{ animal.age }} ans
-                        </p>
+    <div class="animal-header">
+        <div class="container">
+            <div class="d-flex align-items-center flex-wrap">
+                <a href="{{ path('home') }}" class="btn btn-outline-secondary me-3 mb-2 mb-md-0">
+                    <i class="bi bi-arrow-left"></i> Retour
+                </a>
+                <h1 class="animal-name mb-0">{{ animal.name }}</h1>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mb-5">
+        <div class="row g-4">
+            <!-- Left Column: Image and Quick Info -->
+            <div class="col-lg-5">
+                <div class="animal-image">
+                    <img src="{{ animal.photo ? asset('uploads/' ~ animal.photo) : asset('images/default.jpg') }}"
+                         alt="{{ animal.name }}" loading="lazy">
+                </div>
+
+                <div class="animal-meta">
+                    <div class="d-flex justify-content-between align-items-center flex-wrap">
+                        <div class="mb-2 mb-md-0">
+                            <span class="badge-large badge bg-primary">{{ animal.species }}</span>
+                            <span class="badge-large badge bg-secondary">{{ animal.age }} an{% if animal.age > 1 %}s{% endif %}</span>
+                        </div>
+                        <div>
+                            <span class="badge-large badge bg-success">Disponible</span>
+                        </div>
                     </div>
                 </div>
+
+                <div class="action-buttons">
+                    <form method="post" action="{{ path('add_to_cart', { id: animal.id }) }}">
+                        <button type="submit" class="btn btn-adopt w-100 mb-3">
+                            <i class="bi bi-heart me-2"></i> Adopter {{ animal.name }}
+                        </button>
+                    </form>
+                    <a href="{{ path('poser_question_directe', {id: animal.id}) }}" class="btn btn-outline-secondary w-100">
+    <i class="bi bi-question-circle me-2"></i> Poser une question
+</a>
+
+                </div>
             </div>
-            <div class="col-md-6">
-                <div class="card shadow-sm">
-                    <div class="card-body">
-                        <h5 class="card-title">Description</h5>
-                        <p>{{ animal.description }}</p>
+
+            <!-- Right Column: Description and Characteristics -->
+            <div class="col-lg-7">
+                <div class="animal-details">
+                    <h3 class="description-title">À propos de {{ animal.name }}</h3>
+                    <div class="description">
+                        <p class="text-muted">{{ animal.description }}</p>
                     </div>
+
+                    <div class="characteristics">
+                        <h4 class="mb-3">Caractéristiques</h4>
+                        <div class="row">
+                            <div class="col-md-6 characteristic-item">
+                                <i class="bi bi-calendar-event"></i>
+                                <div>
+                                    <div class="text-muted small">Âge</div>
+                                    <div class="fw-bold">{{ animal.age }} an{% if animal.age > 1 %}s{% endif %}</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 characteristic-item">
+                                <i class="bi bi-tag"></i>
+                                <div>
+                                    <div class="text-muted small">Espèce</div>
+                                    <div class="fw-bold">{{ animal.species }}</div>
+                                </div>
+                            </div>
+                            {% if animal.gender is defined %}
+                            <div class="col-md-6 characteristic-item">
+                                <i class="bi bi-gender-ambiguous"></i>
+                                <div>
+                                    <div class="text-muted small">Genre</div>
+                                    <div class="fw-bold">{{ animal.gender }}</div>
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% if animal.weight is defined %}
+                            <div class="col-md-6 characteristic-item">
+                                <i class="bi bi-speedometer"></i>
+                                <div>
+                                    <div class="text-muted small">Poids</div>
+                                    <div class="fw-bold">{{ animal.weight }} kg</div>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    {% if animal.personality is defined %}
+                    <div class="mt-4">
+                        <h4 class="mb-3">Personnalité</h4>
+                        <p class="text-muted">{{ animal.personality }}</p>
+                    </div>
+                    {% endif %}
+
+                    {% if animal.requirements is defined %}
+                    <div class="mt-4">
+                        <h4 class="mb-3">Besoins spécifiques</h4>
+                        <p class="text-muted">{{ animal.requirements }}</p>
+                    </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
 
-        <div class="mt-4">
-            <form method="post" action="{{ path('add_to_cart', { id: animal.id }) }}">
-                <button type="submit" class="btn btn-primary w-100">Ajouter au panier</button>
-            </form>
-        </div>
-
-        <div class="mt-3 text-center">
-            <a href="{{ path('home') }}" class="btn btn-secondary">Retour à l'accueil</a>
+        <!-- Similar Animals Section -->
+        <div class="similar-animals">
+            <h3 class="mb-4">Animaux similaires</h3>
+            <div class="row">
+                <div class="col-12 text-center text-muted">
+                    <p>Aucun animal similaire disponible actuellement.</p>
+                </div>
+            </div>
         </div>
     </div>
 {% endblock %}

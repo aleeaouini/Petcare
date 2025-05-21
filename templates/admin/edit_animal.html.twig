@@ -1,0 +1,77 @@
+{# templates/admin/edit_animal.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier un animal{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+{% endblock %}
+
+{% block body %}
+    <div class="admin-container">
+        <div class="breadcrumb">
+            <div class="breadcrumb-item">
+                <a href="{{ path('home') }}" class="breadcrumb-link">Accueil</a>
+            </div>
+            <div class="breadcrumb-item">
+                <a href="{{ path('dashboard') }}" class="breadcrumb-link">Dashboard</a>
+            </div>
+            <div class="breadcrumb-item">
+                <span class="breadcrumb-current">Modifier {{ animal.name }}</span>
+            </div>
+        </div>
+        
+        <h1 class="admin-title">Modifier l'animal : {{ animal.name }}</h1>
+        
+        <div class="admin-form">
+            {{ form_start(form, {'attr': {'class': 'form'}}) }}
+
+                <div class="form-group">
+                    {{ form_label(form.name, 'Nom', {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form.name, {'attr': {'class': 'form-control'}}) }}
+                    {{ form_errors(form.name) }}
+                </div>
+
+                {% if form.species is defined %}
+                <div class="form-group">
+                    {{ form_label(form.species, 'Espèce', {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form.species, {'attr': {'class': 'form-control'}}) }}
+                    {{ form_errors(form.species) }}
+                </div>
+                {% endif %}
+
+                <div class="form-group">
+                    {{ form_label(form.description, 'Description', {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form.description, {'attr': {'class': 'form-control'}}) }}
+                    {{ form_errors(form.description) }}
+                </div>
+
+                {% if animal.photo %}
+                    <div class="form-group">
+                        <label class="form-label">Photo actuelle :</label><br>
+                        <img src="{{ asset('uploads/photos/' ~ animal.photo) }}" alt="Photo de {{ animal.name }}" style="max-width: 200px; border-radius: 8px;">
+                    </div>
+                {% endif %}
+
+                {% if form.photo is defined %}
+                <div class="form-group">
+                    {{ form_label(form.photo, 'Changer la photo', {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form.photo, {'attr': {'class': 'form-control'}}) }}
+                    {{ form_errors(form.photo) }}
+                </div>
+                {% endif %}
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-success">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 5px;">
+                            <path d="M20 6L9 17L4 12" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        Enregistrer les modifications
+                    </button>
+                    <a href="{{ path('dashboard') }}" class="btn btn-outline" style="margin-left: 10px;">Annuler</a>
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,131 @@
+/* Reset de base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f2f2f2;
+    color: #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+/* Container principal */
+.auth-container {
+    background-color: #fff;
+    padding: 40px;
+    max-width: 420px;
+    width: 100%;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* En-tête */
+.auth-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.auth-title {
+    font-size: 28px;
+    color: #444;
+}
+
+.auth-subtitle {
+    font-size: 16px;
+    color: #888;
+}
+
+/* Formulaire */
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-label {
+    margin-bottom: 6px;
+    font-weight: 500;
+}
+
+.form-control {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 15px;
+    transition: border-color 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: #5b9bd5;
+    outline: none;
+}
+
+/* Checkbox */
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+}
+
+/* Bouton */
+.btn {
+    background-color: #5b9bd5;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+    background-color: #3a7ebf;
+}
+
+/* Pied de formulaire */
+.form-footer {
+    text-align: center;
+    font-size: 14px;
+    margin-top: 15px;
+}
+
+.form-footer a {
+    color: #5b9bd5;
+    text-decoration: none;
+}
+
+.form-footer a:hover {
+    text-decoration: underline;
+}
+
+/* Message d'erreur */
+.alert.alert-danger {
+    background-color: #f8d7da;
+    padding: 10px;
+    border-radius: 5px;
+    color: #842029;
+    margin-bottom: 15px;
+}
+
+/* Utilisateur déjà connecté */
+.user-logged-in {
+    background-color: #d1e7dd;
+    padding: 10px;
+    border-radius: 5px;
+    color: #0f5132;
+    margin-bottom: 15px;
+    font-size: 14px;
+}

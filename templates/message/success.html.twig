@@ -1,0 +1,10 @@
+{# templates/message/success.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Message envoyé{% endblock %}
+
+{% block body %}
+    <h1>Votre message a été envoyé avec succès !</h1>
+    <a href="{{ path('message_new') }}">Envoyer un autre message</a>
+{% endblock %}

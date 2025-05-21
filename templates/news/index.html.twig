@@ -1,0 +1,86 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Actualités Animaux{% endblock %}
+
+{% block stylesheets %}
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 2rem;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 2rem;
+        }
+
+        .news-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+        }
+
+        .news-card {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            width: 300px;
+            padding: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .news-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .news-card h2 {
+            font-size: 1.2rem;
+            color: #444;
+            margin-bottom: 0.5rem;
+        }
+
+        .news-card img {
+            width: 100%;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .news-card p {
+            font-size: 0.95rem;
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .news-card a {
+            text-decoration: none;
+            color: #0066cc;
+            font-weight: bold;
+        }
+
+        .news-card a:hover {
+            text-decoration: underline;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <h1>Actualités sur les animaux</h1>
+    <div class="news-container">
+        {% for article in articles %}
+            <div class="news-card">
+                <h2>{{ article.title }}</h2>
+                {% if article.urlToImage %}
+                    <img src="{{ article.urlToImage }}" alt="image">
+                {% endif %}
+                <p>{{ article.description }}</p>
+                <a href="{{ article.url }}" target="_blank">Lire plus</a>
+            </div>
+        {% else %}
+            <p>Aucune actualité trouvée.</p>
+        {% endfor %}
+    </div>
+{% endblock %}

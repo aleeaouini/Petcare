@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Conversation avec veterinaire{% endblock %}
+
+{% block body %}
+<div class="container mt-4" style="max-width: 800px;">
+    <h2>Conversation avec veterinaire</h2>
+    
+    <div class="bg-light p-3 rounded mb-4" style="height: 500px; overflow-y: auto;">
+        {% for question in questions %}
+            <div class="mb-4 border-bottom pb-3">
+                <!-- Question utilisateur -->
+                <div class="d-flex justify-content-start">
+                    <div class="bg-secondary text-white p-2 rounded">
+                        <strong>{{ email }}</strong>: {{ question.content }}<br>
+                        <small>{{ question.createdAt|date('d/m/Y H:i') }}</small>
+                    </div>
+                </div>
+
+                {% if question.answer %}
+                    <!-- Réponse du véto -->
+                    <div class="d-flex justify-content-end mt-2">
+                        <div class="bg-success text-white p-2 rounded">
+                            <strong>Vétérinaire</strong>: {{ question.answer }}
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        {% else %}
+            <p class="text-center">Aucun message dans cette conversation.</p>
+        {% endfor %}
+    </div>
+
+    <!-- Formulaire pour envoyer un nouveau message -->
+    <form action="{{ path('question_conversation', { email: email }) }}" method="post" class="d-flex">
+        <textarea name="content" class="form-control me-2" rows="2" placeholder="Écrivez votre message ici..." required></textarea>
+        <button type="submit" class="btn btn-primary">Envoyer</button>
+    </form>
+</div>
+{% endblock %}

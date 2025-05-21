@@ -1,0 +1,182 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Chatbot{% endblock %}
+
+{% block body %}
+    <div class="chat-container">
+        <div class="chat-header">
+            <h1>Bienvenue sur le Chatbot</h1>
+        </div>
+        
+        <div id="chatbox" class="chat-messages"></div>
+        
+        <form id="chatForm" class="chat-input">
+            <input type="text" id="messageInput" placeholder="Tapez votre message..." required>
+            <button type="submit">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                </svg>
+            </button>
+        </form>
+    </div>
+
+    <style>
+        .chat-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .chat-header {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #3a70b5;
+        }
+        
+        .chat-messages {
+            height: 450px;
+            overflow-y: auto;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        
+        .chat-messages p {
+            margin: 8px 0;
+            padding: 10px 15px;
+            border-radius: 18px;
+            max-width: 75%;
+            position: relative;
+            word-wrap: break-word;
+        }
+        
+        .chat-messages p.user-message {
+            background-color: #3a70b5;
+            color: white;
+            margin-left: auto;
+            border-bottom-right-radius: 5px;
+        }
+        
+        .chat-messages p.bot-message {
+            background-color: #e9e9eb;
+            color: #333;
+            margin-right: auto;
+            border-bottom-left-radius: 5px;
+        }
+        
+        .chat-messages small {
+            display: block;
+            font-size: 11px;
+            opacity: 0.7;
+            margin-top: 5px;
+        }
+        
+        .chat-input {
+            display: flex;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 25px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .chat-input input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            padding: 10px 15px;
+            font-size: 16px;
+            outline: none;
+        }
+        
+        .chat-input button {
+            background-color: #3a70b5;
+            color: white;
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s;
+        }
+        
+        .chat-input button:hover {
+            background-color: #2a5591;
+        }
+    </style>
+
+    <script>
+        const chatbox = document.getElementById('chatbox');
+        
+        // Load previous messages
+        fetch('/chatbot/messages')
+            .then(res => {
+                if (!res.ok) {
+                    throw new Error('Erreur lors du chargement des messages');
+                }
+                return res.json();
+            })
+            .then(data => {
+                data.messages.forEach(msg => {
+                    const isUser = msg.role === 'user';
+                    const sender = isUser ? 'Moi' : 'Chatbot';
+                    const messageClass = isUser ? 'user-message' : 'bot-message';
+                    
+                    chatbox.innerHTML += `<p class="${messageClass}"><strong>${sender}:</strong> ${msg.content} <small>${msg.createdAt}</small></p>`;
+                });
+                chatbox.scrollTop = chatbox.scrollHeight; // Scroll to bottom
+            })
+            .catch(error => {
+                chatbox.innerHTML += `<p class="bot-message"><strong>Erreur:</strong> Impossible de charger les messages.</p>`;
+            });
+        
+        // Handle form submission
+        document.getElementById('chatForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const message = document.getElementById('messageInput').value.trim();
+            if (!message) return;
+            
+            // Display user message
+            chatbox.innerHTML += `<p class="user-message"><strong>Moi:</strong> ${message} <small>${new Date().toLocaleString()}</small></p>`;
+            chatbox.scrollTop = chatbox.scrollHeight;
+            
+            // Send message to chatbot
+            fetch('/chatbot/message', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ message: message }),
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Erreur serveur: ' + response.status);
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.response && data.response.content) {
+                    const botReply = data.response.content;
+                    chatbox.innerHTML += `<p class="bot-message"><strong>Chatbot:</strong> ${botReply} <small>${new Date().toLocaleString()}</small></p>`;
+                } else if (data.error) {
+                    chatbox.innerHTML += `<p class="bot-message"><strong>Erreur:</strong> ${data.error}</p>`;
+                } else {
+                    chatbox.innerHTML += `<p class="bot-message"><strong>Erreur:</strong> Réponse inattendue du serveur.</p>`;
+                }
+                chatbox.scrollTop = chatbox.scrollHeight;
+                document.getElementById('messageInput').value = '';
+            })
+            .catch(error => {
+                chatbox.innerHTML += `<p class="bot-message"><strong>Erreur technique:</strong> ${error.message}</p>`;
+                chatbox.scrollTop = chatbox.scrollHeight;
+            });
+        });
+    </script>
+{% endblock %}

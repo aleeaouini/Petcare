@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des utilisateurs{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <h2>Utilisateurs ayant posé des questions</h2>
+
+    <div class="list-group mt-4">
+        {% for user in users %}
+            {# user.userEmail est un tableau, on récupère email comme string #}
+            {% set email = user.userEmail ?? user[0] ?? null %}
+            {% if email %}
+                <a href="{{ path('admin_question_conversation', { email: email }) }}" 
+                   class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                    {{ email }}
+
+                    <span class="badge bg-primary rounded-pill">
+                        {% set unreadCount = 0 %}
+                        {% for question in questions %}
+                            {% if question.userEmail == email and not question.isAnswered %}
+                                {% set unreadCount = unreadCount + 1 %}
+                            {% endif %}
+                        {% endfor %}
+                        {{ unreadCount > 0 ? unreadCount : '' }}
+                    </span>
+                </a>
+            {% endif %}
+        {% else %}
+            <div class="alert alert-info">Aucun utilisateur n'a posé de question pour le moment.</div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,7 @@
+<h1>Conversation </h1>
+
+<ul>
+    {% for message in messages %}
+        <li><strong>{{ message.sender.email }}:</strong> {{ message.content }}</li>
+    {% endfor %}
+</ul>

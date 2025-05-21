@@ -1,0 +1,74 @@
+{# templates/admin/new_animal.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter un nouvel animal{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/admin_style.css') }}">
+{% endblock %}
+
+{% block body %}
+    <div class="admin-container">
+        <div class="breadcrumb">
+            <div class="breadcrumb-item">
+                <a href="{{ path('home') }}" class="breadcrumb-link">Accueil</a>
+            </div>
+            <div class="breadcrumb-item">
+                <a href="{{ path('admin_dashboard') }}" class="breadcrumb-link">Dashboard</a>
+            </div>
+            <div class="breadcrumb-item">
+                <span class="breadcrumb-current">Nouvel animal</span>
+            </div>
+        </div>
+        
+        <h1 class="admin-title">Ajouter un nouvel animal</h1>
+        
+        <div class="admin-form">
+            {{ form_start(form, {'attr': {'class': 'form'}, 'enctype': 'multipart/form-data'}) }}
+
+                <div class="form-group">
+                    {{ form_label(form.name, 'Nom', {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form.name, {'attr': {'class': 'form-control'}}) }}
+                    {{ form_errors(form.name) }}
+                </div>
+                
+                <div class="form-group">
+                    {{ form_label(form.species, 'Espèce', {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form.species, {'attr': {'class': 'form-control'}}) }}
+                    {{ form_errors(form.species) }}
+                </div>
+
+                <div class="form-group">
+    {{ form_label(form.age, 'Âge', {'label_attr': {'class': 'form-label'}}) }}
+    {{ form_widget(form.age, {'attr': {'class': 'form-control'}}) }}
+    {{ form_errors(form.age) }}
+</div>
+
+                
+                <div class="form-group">
+                    {{ form_label(form.description, 'Description', {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form.description, {'attr': {'class': 'form-control'}}) }}
+                    {{ form_errors(form.description) }}
+                </div>
+                <div class="form-group">
+    {{ form_label(form.photo, 'Photo', {'label_attr': {'class': 'form-label'}}) }}
+    {{ form_widget(form.photo, {'attr': {'class': 'form-control'}}) }}
+    {{ form_errors(form.photo) }}
+</div>
+
+                
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 5px;">
+                            <path d="M12 5V19" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M5 12H19" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        Ajouter l'animal
+                    </button>
+                    <a href="{{ path('admin_dashboard') }}" class="btn btn-outline" style="margin-left: 10px;">Annuler</a>
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}

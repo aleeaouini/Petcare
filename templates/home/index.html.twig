@@ -1,38 +1,136 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Page d'Accueil{% endblock %}
+{% block title %}Adoptez un Animal - Accueil{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
+    <style>
+        .animal-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-radius: 10px;
+            overflow: hidden;
+            height: 100%;
+        }
+        
+        .animal-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .animal-img {
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .animal-card-body {
+            padding: 1.25rem;
+        }
+        
+        .page-header {
+            background-color: #f8f9fa;
+            padding: 30px 0;
+            margin-bottom: 30px;
+            border-radius: 0 0 10px 10px;
+        }
+        
+        .species-badge {
+            font-size: 0.85rem;
+            padding: 0.4rem 0.6rem;
+        }
+        
+        .age-badge {
+            font-size: 0.85rem;
+            padding: 0.4rem 0.6rem;
+        }
+        
+        .filter-controls {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+        }
+    </style>
 {% endblock %}
 
 {% block body %}
+<div class="page-header bg-light">
     <div class="container">
-        <h1 class="text-center my-4">Liste des animaux</h1>
-        
-        {% if animals|length > 0 %}
-            <div class="row">
-                {% for animal in animals %}
-                    <div class="col-md-4 mb-4">
-                        <div class="card shadow-sm">
-                            <a href="{{ path('animal_show', { id: animal.id }) }}" class="text-decoration-none">
-                                <img src="https://via.placeholder.com/350x200" class="card-img-top" alt="{{ animal.name }}">
-                                <div class="card-body">
-                                    <h5 class="card-title">{{ animal.name }}</h5>
-                                    <p class="card-text">
-                                        <span class="badge bg-primary">{{ animal.species }}</span>
-                                        <span class="badge bg-secondary">{{ animal.age }} ans</span>
-                                    </p>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                {% endfor %}
-            </div>
-        {% else %}
-            <div class="alert alert-warning text-center" role="alert">
-                Aucun animal disponible actuellement.
-            </div>
-        {% endif %}
+        <h1 class="display-4 text-center">Trouvez votre compagnon idéal</h1>
+        <p class="lead text-center text-muted">Découvrez tous nos animaux disponibles pour adoption</p>
     </div>
+</div>
+
+<div class="container">
+    <!-- Filtres (optionnels, à implémenter selon vos besoins) -->
+    <div class="filter-controls">
+        <div class="row align-items-center">
+            <div class="col-md-4">
+                <h5 class="mb-0">Filtrer par :</h5>
+            </div>
+            <div class="col-md-8">
+                <div class="d-flex flex-wrap gap-2">
+                    <button class="btn btn-outline-primary btn-sm">Tous</button>
+                    <button class="btn btn-outline-primary btn-sm">Chiens</button>
+                    <button class="btn btn-outline-primary btn-sm">Chats</button>
+                    <button class="btn btn-outline-primary btn-sm">Autres</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    {% if animals|length > 0 %}
+        <div class="row g-4">
+            {% for animal in animals %}
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card animal-card shadow-sm h-100">
+                        <a href="{{ path('animal_show', { id: animal.id }) }}" class="text-decoration-none text-dark">
+                            <img src="{{ asset('uploads/' ~ animal.photo) }}" class="card-img-top animal-img" alt="{{ animal.name }}">
+
+                            <div class="animal-card-body">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h5 class="card-title mb-0">{{ animal.name }}</h5>
+                                    <span class="age-badge badge bg-secondary">{{ animal.age }} an{% if animal.age > 1 %}s{% endif %}</span>
+                                </div>
+                                <p class="card-text mb-2">
+                                    <span class="species-badge badge bg-primary">{{ animal.species }}</span>
+                                </p>
+                                <hr class="my-2">
+                                <div class="d-flex justify-content-end">
+                                    <button class="btn btn-sm btn-outline-primary">Voir plus</button>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="row">
+            <div class="col-12">
+                <div class="alert alert-warning text-center py-5" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    Aucun animal disponible actuellement.
+                    <p class="mt-3 mb-0">Veuillez revenir plus tard ou contactez-nous pour plus d'informations.</p>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    
+    <!-- Pagination (à implémenter si nécessaire) -->
+    <div class="d-flex justify-content-center mt-4">
+        <nav aria-label="Navigation des pages">
+            <ul class="pagination">
+                <li class="page-item disabled">
+                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Précédent</a>
+                </li>
+                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item">
+                    <a class="page-link" href="#">Suivant</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
 {% endblock %}

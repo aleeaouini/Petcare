@@ -12,12 +12,18 @@ class HomeController extends AbstractController
     #[Route('/home', name: 'home')]
 public function index(AnimalRepository $animalRepository): Response
 {
+    // Si l'utilisateur est connecté ET qu'il a le rôle vétérinaire
+    if ($this->getUser() && $this->isGranted('ROLE_VETERINAIRE')) {
+        return $this->redirectToRoute('admin_dashboard'); // ou une autre route adaptée
+    }
+
     $animals = $animalRepository->findAll();
 
     return $this->render('home/index.html.twig', [
         'animals' => $animals,
     ]);
 }
+
 
     #[Route('/animal/{id}', name: 'animal_show')]
 public function show(int $id, AnimalRepository $animalRepository): Response

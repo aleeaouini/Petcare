@@ -1,0 +1,75 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Conversation avec {{ email }}{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h2 class="mb-4">Conversation avec {{ email }}</h2>
+
+    <div class="chat-box border rounded p-3 d-flex flex-column" style="background-color: #f5f5f5; max-height: 70vh; overflow-y: auto;">
+        {% set messages = [] %}
+
+        {# Fusionner questions et réponses dans un tableau messages #}
+        {% for question in questions %}
+            {% set messages = messages|merge([{
+                sender: question.userEmail,
+                animalName: question.animal.name,
+                content: question.content,
+                createdAt: question.createdAt,
+                isAnswer: false
+            }]) %}
+
+            {% if question.answer %}
+                {% set messages = messages|merge([{
+                    sender: 'Vétérinaire',
+                    content: question.answer,
+                    createdAt: question.createdAt,
+                    isAnswer: true
+                }]) %}
+            {% endif %}
+        {% endfor %}
+
+        {# Trier les messages par date #}
+        {% set messages = messages|sort((a, b) => a.createdAt <=> b.createdAt) %}
+
+        <div style="flex-grow: 1; overflow-y: auto;">
+            {% for msg in messages %}
+                <div class="mb-3">
+                    {% if msg.isAnswer %}
+                        <div class="d-flex flex-column align-items-end">
+                            <div class="bg-success text-white p-3 rounded shadow-sm" style="max-width: 75%;">
+                                {{ msg.content }}
+                            </div>
+                            <small class="text-muted me-2">{{ msg.createdAt|date('d/m/Y H:i') }}</small>
+                        </div>
+                    {% else %}
+                        <div class="d-flex flex-column align-items-start">
+                            <div class="bg-white p-3 rounded shadow-sm" style="max-width: 75%;">
+                                <strong>{{ msg.animalName }} - {{ msg.sender }}</strong><br>
+                                {{ msg.content }}
+                            </div>
+                            <small class="text-muted ms-2">{{ msg.createdAt|date('d/m/Y H:i') }}</small>
+                        </div>
+                    {% endif %}
+                </div>
+            {% else %}
+                <p class="text-muted text-center">Aucune question pour le moment.</p>
+            {% endfor %}
+        </div>
+
+        {# Formulaire d’envoi de réponse à la dernière question #}
+        {% set lastQuestion = questions|last %}
+        {% if lastQuestion %}
+            <form action="{{ path('admin_question_repondre', {'id': lastQuestion.id}) }}" method="post" class="mt-3">
+                <div class="mb-2">
+                    <label for="answerContent" class="form-label">Votre réponse :</label>
+                    <textarea id="answerContent" name="answerContent" class="form-control" rows="3" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Envoyer</button>
+            </form>
+        {% else %}
+            <p class="text-muted text-center mt-3">Aucune question à répondre.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

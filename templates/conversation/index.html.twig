@@ -1,0 +1,14 @@
+<h2>Conversation avec </h2>
+
+{% if messages is defined %}
+    <div class="messages">
+        {% for message in messages %}
+            <div class="{% if message.sender == app.user %}sent{% else %}received{% endif %}">
+                <p>{{ message.content }}</p>
+                <small>{{ message.sentAt|date('Y-m-d H:i') }}</small>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <p>Aucune conversation sélectionnée.</p>
+{% endif %}
