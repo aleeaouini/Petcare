@@ -33,13 +33,7 @@
                     {{ form_errors(form.name) }}
                 </div>
 
-                {% if form.species is defined %}
-                <div class="form-group">
-                    {{ form_label(form.species, 'Espèce', {'label_attr': {'class': 'form-label'}}) }}
-                    {{ form_widget(form.species, {'attr': {'class': 'form-control'}}) }}
-                    {{ form_errors(form.species) }}
-                </div>
-                {% endif %}
+                
 
                 <div class="form-group">
                     {{ form_label(form.description, 'Description', {'label_attr': {'class': 'form-label'}}) }}

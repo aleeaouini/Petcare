@@ -383,7 +383,7 @@
                 <tr>
                     <th>Photo</th>
                     <th>Nom</th>
-                    <th>Espèce</th>
+                    <th>Age</th>
                     <th>Description</th>
                     <th>Actions</th>
                 </tr>
@@ -405,7 +405,7 @@
                             {% endif %}
                         </td>
                         <td class="animal-name">{{ animal.name }}</td>
-                        <td><span class="animal-species">{{ animal.species }}</span></td>
+                        <td><span class="animal-species">{{ animal.age }}</span></td>
                         <td>{{ animal.description|length > 80 ? animal.description|slice(0, 80) ~ '...' : animal.description }}</td>
                         <td class="action-buttons">
                             <a href="{{ path('edit_animal', {'id': animal.id}) }}" class="action-link">

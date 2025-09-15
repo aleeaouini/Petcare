@@ -18,7 +18,6 @@ class AnimalType extends AbstractType
     {
         $builder
             ->add('name', TextType::class)
-            ->add('species', TextType::class)
             ->add('age', IntegerType::class)
             ->add('description', TextareaType::class)
             ->add('photo', FileType::class, [

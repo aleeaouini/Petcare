@@ -33,10 +33,7 @@
             border-radius: 0 0 10px 10px;
         }
         
-        .species-badge {
-            font-size: 0.85rem;
-            padding: 0.4rem 0.6rem;
-        }
+       
         
         .age-badge {
             font-size: 0.85rem;
@@ -91,9 +88,7 @@
                                     <h5 class="card-title mb-0">{{ animal.name }}</h5>
                                     <span class="age-badge badge bg-secondary">{{ animal.age }} an{% if animal.age > 1 %}s{% endif %}</span>
                                 </div>
-                                <p class="card-text mb-2">
-                                    <span class="species-badge badge bg-primary">{{ animal.species }}</span>
-                                </p>
+                                
                                 <hr class="my-2">
                                 <div class="d-flex justify-content-end">
                                     <button class="btn btn-sm btn-outline-primary">Voir plus</button>

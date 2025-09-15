@@ -50,7 +50,7 @@
 {% if is_granted('ROLE_USER') and not is_granted('ROLE_VETERINAIRE') %}
     <li class="nav-item position-relative">
         <a class="nav-link" href="{{ path('view_cart') }}">
-            🛒 Panier
+             Mes Animaux
             {% set count = app.session.get('cart')|default([])|length %}
             {% if count > 0 %}
                 <span class="badge bg-danger rounded-pill position-absolute top-0 start-100 translate-middle">{{ count }}</span>

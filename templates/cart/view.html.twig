@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Mon Panier{% endblock %}
+{% block title %}Adopter{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -187,14 +187,14 @@
 {% block body %}
     <div class="cart-header">
         <div class="container">
-            <h1>Mon Panier</h1>
+            <h1>Adopter</h1>
         </div>
     </div>
 
     <div class="container mb-5">
         {% if items is empty %}
             <div class="empty-cart">
-                <p>Votre panier est vide.</p>
+                <p>Votre Adopter est vide.</p>
                 <a href="{{ path('home') }}" class="btn-back">
                     <i class="bi bi-arrow-left me-2"></i> Retour à l'accueil
                 </a>
@@ -223,7 +223,7 @@
             <div class="action-section">
                 <form method="post" action="{{ path('confirm_cart') }}">
                     <button type="submit" class="btn-confirm">
-                        <i class="bi bi-check-circle me-2"></i> Confirmer le panier
+                        <i class="bi bi-check-circle me-2"></i> Confirmer l'adaptation
                     </button>
                 </form>
             </div>

@@ -19,8 +19,6 @@ class Animal
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $species = null;
 
     #[ORM\Column]
     private ?int $age = null;
@@ -58,16 +56,7 @@ class Animal
         return $this;
     }
 
-    public function getSpecies(): ?string
-    {
-        return $this->species;
-    }
 
-    public function setSpecies(string $species): static
-    {
-        $this->species = $species;
-        return $this;
-    }
 
     public function getAge(): ?int
     {

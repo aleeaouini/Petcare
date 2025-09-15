@@ -205,7 +205,7 @@
                 <div class="animal-meta">
                     <div class="d-flex justify-content-between align-items-center flex-wrap">
                         <div class="mb-2 mb-md-0">
-                            <span class="badge-large badge bg-primary">{{ animal.species }}</span>
+                            
                             <span class="badge-large badge bg-secondary">{{ animal.age }} an{% if animal.age > 1 %}s{% endif %}</span>
                         </div>
                         <div>
@@ -245,13 +245,7 @@
                                     <div class="fw-bold">{{ animal.age }} an{% if animal.age > 1 %}s{% endif %}</div>
                                 </div>
                             </div>
-                            <div class="col-md-6 characteristic-item">
-                                <i class="bi bi-tag"></i>
-                                <div>
-                                    <div class="text-muted small">Espèce</div>
-                                    <div class="fw-bold">{{ animal.species }}</div>
-                                </div>
-                            </div>
+                            
                             {% if animal.gender is defined %}
                             <div class="col-md-6 characteristic-item">
                                 <i class="bi bi-gender-ambiguous"></i>
